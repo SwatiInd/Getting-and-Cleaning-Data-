@@ -1,8 +1,11 @@
 ---
 output:
-  pdf_document: default
   html_document: default
+  pdf_document: default
 ---
+
+
+In the code, dplyr and plyr packages are used to manipulate data frames.
 ```
 library(dplyr)
 library(plyr)
@@ -59,25 +62,35 @@ c("1"="WALK","2"="WALK_UP","3"="WALK_DOWN", "4"= "SIT", "5" = "STAND", "6"= "LAY
 # 4. Appropriately labels the data set with descriptive variable names #
 The descriptive variable names are developed with the same way as explained in detail for the example : "tBodyAcc.mean...X
 (a) The variable names have dot(.) which are replaced by (-). It leads to "tBodayACC-mean-X"
-(b) The first word tBodyAcc is difficult to remember and there it is separated by dash as "t-Body-Acc-mean--X"
-(c) Double dash is removed to create "t-Body-Acc-mean-X"
 ```
 name_var <- strsplit(names(selected_data), "\\.") %>%
         sapply(function(a) {a <- a[!a ==""];  a <- paste(a, collapse = "-")})
+```
+(b) The first word tBodyAcc is difficult to remember and there it is separated by dash as "t-Body-Acc-mean--X"
+```
 name_var <- strsplit(name_var, "(?<=.)(?=[[:upper:]])", perl=TRUE) %>%
                   sapply(function(x) x <- paste(x, collapse = "-"))
+```
+(c) Double dash is removed to create "t-Body-Acc-mean-X"
+```
 name_var <- strsplit(name_var, "--") %>%
       sapply(function(a) {a <- paste(a, collapse = "-")})
-
+```
+(d) At the end, these descriptive variable names were assigned to the selected_data column names. 
+```
 names(selected_data) <- name_var
 ```
-# 5. From the data set in step 4, creates a second, independent tidy data set with the average of each variable for each activity and each subject #
+# 5. Average of each variable for each activity and each subject #
+From the data set in step 4, a second independent tidy data set was created for average of each variable with the following steps:
 (a) Data is grouped by id and activity by using function group_by
 (b) Subsequently, mean is calculated for each subject and each activity.
-(c) Data is written in txt file.
 
 ```
 mean_activity <- selected_data %>% group_by(id, activity) %>%
         summarise_all(~ mean(.x, na.rm = TRUE))
-write.table(mean_activity, file = "Activity_mean.txt",row.name=FALSE)
+
+```
+(c) Data is written in txt file named as "Activity_mean.txt"
+```
+write.table(mean_activity, file = "Activity_mean.txt",row.name=FALSE, col.names = FALSE)
 ```
