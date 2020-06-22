@@ -48,7 +48,7 @@ names(selected_data) <- name_var
 mean_activity <- selected_data %>% group_by(id, activity) %>%
         summarise_all(~ mean(.x, na.rm = TRUE))
 write.table(colnames(mean_activity), file = "Activity_mean_variable.txt",row.name=TRUE, col.names = FALSE, quote = FALSE)
-write.table(mean_activity, file = "Activity_mean.txt",row.name=FALSE, col.names = FALSE)
+write.table(mean_activity, file = "Activity_mean.txt",row.name=FALSE)
 
 
 
