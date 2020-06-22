@@ -39,8 +39,8 @@ columns of id, activity, and set of test and train are combined individually.
 one_data <- rbind(test,train)
 ```
 
-#2. Extracts only the measurements on the mean and standard deviation for each measurement.#
-(a) Variable names have mean() and std() for mean and standard deviation.
+# 2. Extracts only the measurements on the mean and standard deviation for each measurement.#
+(a) Variable names have mean() and std() for mean and standard deviation. \
 (b) While extracting these columns, variables which have meanFreq are also selected. Therefore, in the next step they are deselected.
 
 ```
@@ -60,8 +60,8 @@ c("1"="WALK","2"="WALK_UP","3"="WALK_DOWN", "4"= "SIT", "5" = "STAND", "6"= "LAY
   ```
 
 # 4. Appropriately labels the data set with descriptive variable names #
-The descriptive variable names are developed with the same way as explained in detail for the example : "tBodyAcc.mean...X
-(a) The variable names have dot(.) which are replaced by (-). It leads to "tBodayACC-mean-X"
+
+(a) The descriptive variable names are developed with the same way as explained in detail for the example : "tBodyAcc.mean...X. The variable names have dot(.) which are replaced by (-). It leads to "tBodayACC-mean-X"
 ```
 name_var <- strsplit(names(selected_data), "\\.") %>%
         sapply(function(a) {a <- a[!a ==""];  a <- paste(a, collapse = "-")})
@@ -81,16 +81,17 @@ name_var <- strsplit(name_var, "--") %>%
 names(selected_data) <- name_var
 ```
 # 5. Average of each variable for each activity and each subject #
-From the data set in step 4, a second independent tidy data set was created for average of each variable with the following steps:
-(a) Data is grouped by id and activity by using function group_by
-(b) Subsequently, mean is calculated for each subject and each activity.
+From the data set in step 4, a second independent tidy data set was created for average of each variable with the following steps: \
+(a) Data is grouped by id and activity by using function group_by \
+(b) Subsequently, mean is calculated for each subject and each activity.\
 
 ```
 mean_activity <- selected_data %>% group_by(id, activity) %>%
         summarise_all(~ mean(.x, na.rm = TRUE))
 
 ```
-(c) Data is written in txt file named as "Activity_mean.txt"
+(c) Data is written in txt file named as "Activity_mean.txt" and their variables' names are in "Activity_mean_variable.txt"
 ```
+write.table(colnames(mean_activity), file = "Activity_mean_variable.txt",row.name=TRUE, col.names = FALSE, quote = FALSE)
 write.table(mean_activity, file = "Activity_mean.txt",row.name=FALSE, col.names = FALSE)
 ```
